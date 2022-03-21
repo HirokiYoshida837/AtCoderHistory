@@ -10,20 +10,10 @@ namespace ABC236B
             var n = int.Parse(Console.ReadLine());
             var a = Console.ReadLine().Split().Select(int.Parse).ToList();
 
-            var count = new int[n + 1];
-            
-            foreach (var item in a)
-            {
-                count[item]++;
-            }
-            
-            for (var i = 0; i < count.Length; i++)
-            {
-                if (count[i] == 3)
-                {
-                    Console.WriteLine(i++);
-                }
-            }
+            var ans = a.GroupBy(x => x)
+                .First(x => x.Count() == 3).Key;
+
+            Console.WriteLine(ans);
         }
     }
 }
