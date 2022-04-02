@@ -14,33 +14,24 @@ namespace ABC245C
             var a = Console.ReadLine().Split().Select(int.Parse).ToArray();
             var b = Console.ReadLine().Split().Select(int.Parse).ToArray();
 
-            var flg = false;
+            var enableNum = new List<int>();
+            enableNum.AddRange(new[]{a[0], b[0]});
 
-
-            for (int bit = 0; bit < 1<<n; bit++)
+            for (int i = 1; i < n; i++)
             {
-                var s = Convert.ToString(bit, 2).PadLeft(n, '0');
-
-                var list = s.Select((x, i) => x == '1' ? a[i] : b[i]).ToList();
-
-                var l = new List<int>();
-                for (var i = 1; i < list.Count; i++)
+                var next = new List<int>();
+                
+                foreach (var num in enableNum)
                 {
-                    l.Add(Math.Abs(list[i] - list[i-1]));
+                    if(Math.Abs(a[i] - num) <= k) next.Add(a[i]);
+                    if(Math.Abs(b[i] - num) <= k) next.Add(b[i]);
                 }
 
-                var findIndex = l.FindIndex(x=>x > k);
-
-                if (findIndex < 0)
-                {
-                    flg = true;
-                    break;
-                }
+                next = next.Distinct().ToList();
+                enableNum = next;
             }
 
-            Console.WriteLine(flg ? "Yes" : "No");
-
-
+            Console.WriteLine(enableNum.Count > 0 ? "Yes" : "No");
         }
     }
 }
