@@ -12,17 +12,12 @@ namespace ABC246B
             var a = ab[0];
             var b  = ab[1];
 
-            if (b ==0)
-            {
-                Console.WriteLine("1 0");
-                return;
-            }
+            var d = Math.Sqrt(a * a + b * b);
 
+            var cos = a / d;
+            var sin = b / d;
 
-            var x2 = 1d/(1d  + (a / b)* (a / b));
-            var y2 = 1d - x2;
-
-            Console.WriteLine($"{Math.Sqrt(y2)} {Math.Sqrt(x2)}");
+            Console.WriteLine($"{cos} {sin}");
         }
     }
 }
