@@ -32,18 +32,21 @@ namespace ABC248C
                 arr[a[i]].Add(i);
             }
             
-            foreach (var (l,r,x) in queries)
+            foreach (var query in queries)
             {
+                var l = query.l - 1;
+                var r = query.r - 1;
+                var x = query.x;
                 var ints = arr[x];
 
                 // ソート済なのでBinarySearchが使える
-                var lind = ints.BinarySearch(l-1);
+                var lind = ints.BinarySearch(l);
                 if (lind < 0)
                 {
                     lind = ~lind;
                 }
 
-                var rind = ints.BinarySearch(r);
+                var rind = ints.BinarySearch(r+1);
                 if (rind < 0)
                 {
                     rind = ~rind;
