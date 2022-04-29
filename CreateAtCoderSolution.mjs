@@ -19,7 +19,7 @@ cd(`./${contestName}`)
 
 await Promise.all(problems.map(async id =>
 {
-    return await createProj(`ABC234${id}`)
+    return await createProj(`${contestName}${id}`)
 }))
 
 

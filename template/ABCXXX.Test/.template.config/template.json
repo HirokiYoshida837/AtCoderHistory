@@ -1,0 +1,28 @@
+{
+    "author": "H.Yoshida",
+    "name": "AtCoder ABC UnitTest Template",
+    "description": "no description",
+    "identity": "AtCoderTest.ConsoleApp.1.0",
+    "shortName": "AtCoderTest",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "sourceName": "ABCXXX.Test",
+    "symbols": {
+      "Framework": {
+        "type": "parameter",
+        "description": "The target framework for the project.",
+        "datatype": "choice",
+        "choices": [
+          {
+            "choice": "netcoreapp2.0"
+          },
+          {
+            "choice": "netcoreapp3.0"
+          }
+        ],
+        "defaultValue": "netcoreapp3.0"
+      }
+    }
+  }

@@ -1,0 +1,28 @@
+{
+    "author": "H.Yoshida",
+    "name": "AtCoder ABC Template",
+    "description": "no description",
+    "identity": "AtCoderMain.ConsoleApp.1.0",
+    "shortName": "AtCoderMain",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "sourceName": "ABCXXX",
+    "symbols": {
+      "Framework": {
+        "type": "parameter",
+        "description": "The target framework for the project.",
+        "datatype": "choice",
+        "choices": [
+          {
+            "choice": "netcoreapp2.0"
+          },
+          {
+            "choice": "netcoreapp3.0"
+          }
+        ],
+        "defaultValue": "netcoreapp3.0"
+      }
+    }
+  }
