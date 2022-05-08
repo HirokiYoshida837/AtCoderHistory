@@ -3,9 +3,9 @@
 ## script
 
 ```shell
-./CreateAtCoderSolution.mjs --contestName=ABC234
+$ npm run createProj -- --contestName=ABC999
 ```
 
 ```shell
-./CreateAtCoderProject.mjs --projectName=ABC234A
+$ npm run addProj -- ABC999/*
 ```
