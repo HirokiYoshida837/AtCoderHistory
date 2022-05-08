@@ -1,0 +1,23 @@
+{
+  "name": "atcoderbeginnerscontest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "createProj": "zx ./scripts/CreateProj.mjs",
+    "addProj": "dotnet sln add"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HirokiYoshida837/ABChistory.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HirokiYoshida837/ABChistory/issues"
+  },
+  "homepage": "https://github.com/HirokiYoshida837/ABChistory#readme",
+  "devDependencies": {
+    "zx": "^6.1.0"
+  }
+}
