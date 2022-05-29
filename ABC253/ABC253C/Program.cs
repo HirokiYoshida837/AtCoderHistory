@@ -16,6 +16,85 @@ namespace ABC253C
     {
         public static void Main(string[] args)
         {
+            solve2();
+        }
+
+
+        // sortedDictionaryで解く
+        public static void solve2()
+        {
+            var q = ReadValue<int>();
+            (int a, long b, long c)[] queries = Enumerable.Range(0, q)
+                .Select(_ =>
+                {
+                    var array = Console.ReadLine().Split().Select(long.Parse).ToArray();
+
+                    if (array[0] == 3)
+                    {
+                        return (3, -1, -1);
+                    }
+
+                    if (array[0] == 1)
+                    {
+                        return (1, array[1], -1);
+                    }
+
+                    if (array[0] == 2)
+                    {
+                        return (2, array[1], array[2]);
+                    }
+
+                    return (-1, -1, -1);
+                })
+                .ToArray();
+
+            var s = new SortedDictionary<long, long>();
+            var sRev = new SortedDictionary<long, long>();
+
+            foreach (var (a, b, c) in queries)
+            {
+                if (a == 1)
+                {
+                    if (s.ContainsKey(b))
+                    {
+                        s[b] += 1;
+                        sRev[-b] += 1;
+                    }
+                    else
+                    {
+                        s.Add(b, 1);
+                        sRev.Add(-b, 1);
+                    }
+                }
+                else if (a == 2)
+                {
+                    if (s.ContainsKey(b))
+                    {
+                        var l = s[b];
+                        if (l <= c)
+                        {
+                            s.Remove(b);
+                            sRev.Remove(-b);
+                        }
+                        else
+                        {
+                            s[b] -= c;
+                            sRev[-b] -= c;
+                        }
+                    }
+                }
+                else
+                {
+                    var max = sRev.First().Key * -1;
+                    var min = s.First().Key;
+                    Console.WriteLine(max - min);
+                }
+            }
+        }
+
+
+        public static void solve1()
+        {
             var q = ReadValue<int>();
             (int a, long b, long c)[] queries = Enumerable.Range(0, q)
                 .Select(_ =>
@@ -89,12 +168,12 @@ namespace ABC253C
                         if (l <= c)
                         {
                             s.Remove(b);
-                            
+
                             if (contains.Contains(b))
                             {
                                 contains.Remove(b);
                             }
-                            
+
                             notContains.Add(b);
                         }
                         else
