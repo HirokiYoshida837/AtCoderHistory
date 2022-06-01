@@ -22,37 +22,60 @@ namespace ABC183D
                 .Select(_ => ReadValue<long, long, long>())
                 .ToArray();
 
-            List<(long ev, long val)> sEvent = stp.Select(x => (x.s, x.p))
-                // .OrderBy(x => x.s)
+            var list = stp.Select(x=>new List<(long,long)>(){(x.s, x.p), (x.t, -x.p)})
+                .SelectMany(x=>x)
+                .GroupBy(x=>x.Item1)
+                .OrderBy(x=>x.Key)
+                .Select(x=>x.Select(x=>x.Item2).Sum())
                 .ToList();
 
-            List<(long ev, long val)> tEvent = stp.Select(x => (x.t, -x.p))
-                // .OrderBy(x => x.t)
-                .ToList();
-
-            sEvent.AddRange(tEvent);
-            var dic = sEvent.OrderBy(x => x.ev)
-                .GroupBy(x => x.ev)
-                .ToList();
-
-
-            var currentTime = 0L;
-            var water = 0L;
-            foreach (var item in dic)
+            var sum = 0L;
+            foreach (var l in list)
             {
-                var sum = item.Select(x => x.val).Sum();
-
-                water += sum;
-                if (water > w)
+                sum += l;
+                if (sum > w)
                 {
                     Console.WriteLine("No");
                     return;
                 }
-
-                currentTime = item.Key;
             }
-
             Console.WriteLine("Yes");
+            
+            
+            //
+            //
+            //
+            // List<(long ev, long val)> sEvent = stp.Select(x => (x.s, x.p))
+            //     // .OrderBy(x => x.s)
+            //     .ToList();
+            //
+            // List<(long ev, long val)> tEvent = stp.Select(x => (x.t, -x.p))
+            //     // .OrderBy(x => x.t)
+            //     .ToList();
+            //
+            // sEvent.AddRange(tEvent);
+            // var dic = sEvent.OrderBy(x => x.ev)
+            //     .GroupBy(x => x.ev)
+            //     .ToList();
+            //
+            //
+            // var currentTime = 0L;
+            // var water = 0L;
+            // foreach (var item in dic)
+            // {
+            //     var sum = item.Select(x => x.val).Sum();
+            //
+            //     water += sum;
+            //     if (water > w)
+            //     {
+            //         Console.WriteLine("No");
+            //         return;
+            //     }
+            //
+            //     currentTime = item.Key;
+            // }
+            //
+            // Console.WriteLine("Yes");
         }
 
 
