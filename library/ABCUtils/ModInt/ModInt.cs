@@ -61,5 +61,25 @@
                 p %= a;
             }
         }
+        
+        public ModInt Power(long m)
+        {
+            ModInt pow = this;
+            ModInt res = 1;
+
+            while (m > 0)
+            {
+                if ((m & 1) == 1)
+                {
+                    res *= pow;
+                }
+
+                pow *= pow;
+
+                m >>= 1;
+            }
+
+            return res;
+        }
     }
 }
