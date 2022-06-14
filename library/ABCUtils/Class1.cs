@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ABCUtils
 {
@@ -38,6 +39,32 @@ namespace ABCUtils
         {
             // (a*b)/GCD だとオーバーフローするかもしれないので、先に割り算する
             return (a / GCD(a, b)) * b;
+        }
+        
+        
+        /**
+         * 約数列挙
+         */
+        public static List<int> getDivisor(int n)
+        {
+            var ret = new List<int>();
+
+            for (int i = 1; i*i <=n; i++)
+            {
+                if (n % i != 0)
+                {
+                    continue;
+                }
+
+                ret.Add(i);
+
+                if (n/i != i)
+                {
+                    ret.Add(n/i);
+                }
+            }
+
+            return ret;
         }
     }
 
