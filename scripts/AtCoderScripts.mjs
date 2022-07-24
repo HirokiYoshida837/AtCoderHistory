@@ -1,5 +1,5 @@
 ﻿export async function createProj(ProjName, needTest) {
-    
+
     console.log("--- --- --- create Main project --- --- ---")
     let mainCreateCode = await $`dotnet new AtCoderMain -o "${ProjName}"`
 
