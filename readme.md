@@ -1,4 +1,4 @@
-﻿# AtCoderBeginersContest
+﻿# AtCoderHistory
 
 ## Scripts
 
@@ -9,6 +9,11 @@ dotnet new --install <PATH_TO_TEMPLATE>
 
 ```shell
 npm run createProject -- --contestName=ABC999
+```
+
+手でやりたい場合は
+```shell
+dotnet sln add ABC/ABCxxx*
 ```
 
 ## Links
