@@ -21,58 +21,101 @@ namespace ABC211C
         {
             var s = ReadValue<string>();
 
-            // 配るDPで考える
-            // 一次元DPで考える場合
-
-            var dp = new long[9];
-            dp[0] = 1;
-            for (int i = 0; i < s.Length; i++)
+            var dp = new long[chokudai.Length][];
+            for (var i = 0; i < dp.Length; i++)
             {
-                for (int j = 0; j < chokudai.Length; j++)
+                dp[i] = new long[s.Length];
+            }
+
+            if (s[0] == chokudai[0])
+            {
+                dp[0][0] = 1;
+            }
+
+            // 1行目を初期化
+            for (int i = 1; i < s.Length; i++)
+            {
+                if (s[i] == chokudai[0])
+                {
+                    dp[0][i] = dp[0][i - 1] + 1;
+                }
+                else
+                {
+                    dp[0][i] = dp[0][i - 1];
+                }
+            }
+
+
+            for (int j = 1; j < chokudai.Length; j++)
+            {
+                for (int i = 1; i < s.Length; i++)
                 {
                     if (s[i] == chokudai[j])
                     {
-                        dp[j + 1] += dp[j];
-                        dp[j + 1] %= MOD;
+                        dp[j][i] = (dp[j][i - 1] + dp[j - 1][i - 1]) % MOD;
+                    }
+                    else
+                    {
+                        dp[j][i] = dp[j][i - 1];
                     }
                 }
             }
 
-            Console.WriteLine(dp[^1]);
+            Console.WriteLine(dp.Last().Last());
 
-            // 貰うDPで解く。
-            // 二次元DPで考える場合
-            // var dp = new long[s.Length][];
+
+            // // 配るDPで考える
+            // // 一次元DPで考える場合
             //
+            // var dp = new long[9];
+            // dp[0] = 1;
             // for (int i = 0; i < s.Length; i++)
-            // {
-            //     dp[i] = new long[chokudai.Length];
-            // }
-            // if (s[0] == 'c')
-            // {
-            //     dp[0][0] = 1;
-            // }
-            //
-            // for (int i = 1; i < s.Length; i++)
             // {
             //     for (int j = 0; j < chokudai.Length; j++)
             //     {
-            //         dp[i][j] = dp[i - 1][j];
-            //
             //         if (s[i] == chokudai[j])
             //         {
-            //             if (j >= 1)
-            //             {
-            //                 dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD;
-            //             }
-            //             else
-            //             {
-            //                 dp[i][j] = (dp[i][j] + 1) % MOD;
-            //             }
+            //             dp[j + 1] += dp[j];
+            //             dp[j + 1] %= MOD;
             //         }
             //     }
             // }
-            // Console.WriteLine(dp[s.Length - 1][chokudai.Length - 1]);
+            //
+            // Console.WriteLine(dp[^1]);
+            //
+            // // 貰うDPで解く。
+            // // 二次元DPで考える場合
+            // // var dp = new long[s.Length][];
+            // //
+            // // for (int i = 0; i < s.Length; i++)
+            // // {
+            // //     dp[i] = new long[chokudai.Length];
+            // // }
+            // // if (s[0] == 'c')
+            // // {
+            // //     dp[0][0] = 1;
+            // // }
+            // //
+            // // for (int i = 1; i < s.Length; i++)
+            // // {
+            // //     for (int j = 0; j < chokudai.Length; j++)
+            // //     {
+            // //         dp[i][j] = dp[i - 1][j];
+            // //
+            // //         if (s[i] == chokudai[j])
+            // //         {
+            // //             if (j >= 1)
+            // //             {
+            // //                 dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD;
+            // //             }
+            // //             else
+            // //             {
+            // //                 dp[i][j] = (dp[i][j] + 1) % MOD;
+            // //             }
+            // //         }
+            // //     }
+            // // }
+            // // Console.WriteLine(dp[s.Length - 1][chokudai.Length - 1]);
         }
 
 
