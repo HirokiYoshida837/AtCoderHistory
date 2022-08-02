@@ -66,6 +66,28 @@ namespace ABCUtils
 
             return ret;
         }
+        
+        /// <summary>
+        /// 素因数分解
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static IEnumerable<long> PrimeFactors(long n)
+        {
+            long i = 2;
+            long tmp = n;
+
+            while (i * i <= n)
+            {
+                if(tmp % i == 0){
+                    tmp /= i;
+                    yield return i;
+                }else{
+                    i++;
+                }
+            }
+            if(tmp != 1) yield return tmp;//最後の素数も返す
+        }
     }
 
 }
