@@ -11,7 +11,7 @@ namespace ABCUtils
         //     if (b == 0) return a;
         //     return GCD(b, a % b);
         // }
-        
+
         /// <summary>
         /// 最大公約数 (the Greatest Common Divisor) を計算します。(再帰なし)
         /// </summary>
@@ -41,15 +41,16 @@ namespace ABCUtils
             return (a / GCD(a, b)) * b;
         }
         
-        
-        /**
-         * 約数列挙
-         */
+        /// <summary>
+        /// 約数列挙(そのままリストで受け取る)
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static List<int> getDivisor(int n)
         {
             var ret = new List<int>();
 
-            for (int i = 1; i*i <=n; i++)
+            for (int i = 1; i * i <= n; i++)
             {
                 if (n % i != 0)
                 {
@@ -58,15 +59,34 @@ namespace ABCUtils
 
                 ret.Add(i);
 
-                if (n/i != i)
+                if (n / i != i)
                 {
-                    ret.Add(n/i);
+                    ret.Add(n / i);
                 }
             }
 
             return ret;
         }
-        
+
+        /// <summary>
+        /// 約数列挙(IEnumerableで受け取る。ソート未)
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static IEnumerable<long> GetDivisors(long num)
+        {
+            if (num < 1) yield break;
+
+            for (long i = 1; i * i <= num; i++)
+            {
+                if (num % i == 0)
+                {
+                    yield return i;
+                    if (i * i != num) yield return (num / i);
+                }
+            }
+        }
+
         /// <summary>
         /// 素因数分解
         /// </summary>
@@ -79,15 +99,18 @@ namespace ABCUtils
 
             while (i * i <= n)
             {
-                if(tmp % i == 0){
+                if (tmp % i == 0)
+                {
                     tmp /= i;
                     yield return i;
-                }else{
+                }
+                else
+                {
                     i++;
                 }
             }
-            if(tmp != 1) yield return tmp;//最後の素数も返す
+
+            if (tmp != 1) yield return tmp; //最後の素数も返す
         }
     }
-
 }
