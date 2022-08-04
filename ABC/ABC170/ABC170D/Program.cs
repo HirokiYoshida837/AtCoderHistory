@@ -23,42 +23,78 @@ namespace ABC170D
 
             var dictionary = aList.GroupBy(x => x).ToDictionary(x => x.Key, x => x);
 
-            var used = new HashSet<long>();
+            var max = aList.Last() + 1;
+
+            // エラストテネスの篩っぽく考える。
+            var counts = new int[max];
+            foreach (var key in dictionary.Keys)
+            {
+                var item = key;
+                for (int i = key; i < max; i+=key)
+                {
+                    counts[i] += 1;
+                }
+            }
 
             var count = 0L;
-
-            foreach (var a in aList)
+            var hashSet = dictionary.Keys.ToHashSet();
+            
+            for (var i = 1; i < counts.Length; i++)
             {
-                var flag = true;
-                if (dictionary[a].Count() > 1)
+                if (counts[i] > 1)
                 {
-                    if (used.Contains(a))
+                    continue;
+                }
+
+                if (hashSet.Contains(i))
+                {
+                    if (dictionary[i].Count()>1)
                     {
                         continue;
                     }
-
-                    flag = false;
-                }
-
-
-                foreach (var divisor in GetDivisors(a))
-                {
-                    if (used.Contains(divisor))
-                    {
-                        flag = false;
-                        break;
-                    }
-                }
-
-                if (flag)
-                {
                     count++;
                 }
-
-                used.Add(a);
             }
 
             Console.WriteLine(count);
+
+
+            // var used = new HashSet<long>();
+            //
+            // var count = 0L;
+            //
+            // foreach (var a in aList)
+            // {
+            //     var flag = true;
+            //     if (dictionary[a].Count() > 1)
+            //     {
+            //         if (used.Contains(a))
+            //         {
+            //             continue;
+            //         }
+            //
+            //         flag = false;
+            //     }
+            //
+            //
+            //     foreach (var divisor in GetDivisors(a))
+            //     {
+            //         if (used.Contains(divisor))
+            //         {
+            //             flag = false;
+            //             break;
+            //         }
+            //     }
+            //
+            //     if (flag)
+            //     {
+            //         count++;
+            //     }
+            //
+            //     used.Add(a);
+            // }
+            //
+            // Console.WriteLine(count);
         }
 
         public static IEnumerable<long> GetDivisors(long num)
