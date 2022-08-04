@@ -16,16 +16,63 @@ namespace ABC170D
     {
         public static void Main(string[] args)
         {
-            // var t = int.Parse(Console.ReadLine());
+            var n = ReadValue<int>();
+            var aList = ReadList<int>().ToList();
 
-            // static int func(int x)
-            // {
-            //     return x * x + 2 * x + 3;
-            // }
+            aList = aList.OrderBy(x => x).ToList();
 
-            // var ans = func(func(func(t) + t) + func(func(t)));
+            var dictionary = aList.GroupBy(x => x).ToDictionary(x => x.Key, x => x);
 
-            // Console.WriteLine(ans);
+            var used = new HashSet<long>();
+
+            var count = 0L;
+
+            foreach (var a in aList)
+            {
+                var flag = true;
+                if (dictionary[a].Count() > 1)
+                {
+                    if (used.Contains(a))
+                    {
+                        continue;
+                    }
+
+                    flag = false;
+                }
+
+
+                foreach (var divisor in GetDivisors(a))
+                {
+                    if (used.Contains(divisor))
+                    {
+                        flag = false;
+                        break;
+                    }
+                }
+
+                if (flag)
+                {
+                    count++;
+                }
+
+                used.Add(a);
+            }
+
+            Console.WriteLine(count);
+        }
+
+        public static IEnumerable<long> GetDivisors(long num)
+        {
+            if (num < 1) yield break;
+
+            for (long i = 1; i * i <= num; i++)
+            {
+                if (num % i == 0)
+                {
+                    yield return i;
+                    if (i * i != num) yield return (num / i);
+                }
+            }
         }
 
 
@@ -53,7 +100,7 @@ namespace ABC170D
                 (T3) Convert.ChangeType(input[2], typeof(T3))
             );
         }
-        
+
         /// <summary>
         /// 指定した型として、一行読み込む。
         /// </summary>
