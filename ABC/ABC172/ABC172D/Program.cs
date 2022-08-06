@@ -16,16 +16,49 @@ namespace ABC172D
     {
         public static void Main(string[] args)
         {
-            // var t = int.Parse(Console.ReadLine());
+            var (n, m, k) = ReadValue<int, int, long>();
+            var aList = ReadList<long>().ToArray();
+            var bList = ReadList<long>().ToArray();
 
-            // static int func(int x)
-            // {
-            //     return x * x + 2 * x + 3;
-            // }
 
-            // var ans = func(func(func(t) + t) + func(func(t)));
+            var aCusum = new List<long>() {0};
+            var bCusum = new List<long>() {0};
 
-            // Console.WriteLine(ans);
+            foreach (var a in aList)
+            {
+                aCusum.Add(a + aCusum.Last());
+            }
+
+            foreach (var b in bList)
+            {
+                bCusum.Add(b + bCusum.Last());
+            }
+
+            var binarySearchA = aCusum.BinarySearch(k);
+            if (binarySearchA < 0)
+            {
+                binarySearchA = ~binarySearchA;
+                binarySearchA -= 1;
+            }
+
+
+            var maxCount = 0L;
+
+            for (int i = binarySearchA; i >= 0; i--)
+            {
+                var remain = k - aCusum[i];
+
+                var binarySearchB = bCusum.BinarySearch(remain);
+                if (binarySearchB < 0)
+                {
+                    binarySearchB = ~binarySearchB;
+                    binarySearchB -= 1;
+                }
+
+                maxCount = Math.Max(maxCount, i + binarySearchB);
+            }
+
+            Console.WriteLine(maxCount);
         }
 
 
@@ -53,7 +86,7 @@ namespace ABC172D
                 (T3) Convert.ChangeType(input[2], typeof(T3))
             );
         }
-        
+
         /// <summary>
         /// 指定した型として、一行読み込む。
         /// </summary>
