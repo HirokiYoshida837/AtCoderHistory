@@ -10,77 +10,70 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Math;
 
-namespace ABC264D
+namespace ChokudaiS0001_J
 {
     public static class Program
     {
         public static void Main(string[] args)
         {
-            var s = ReadValue<string>().ToCharArray();
 
-            var atcoder = "atcoder";
-            var dictionary = atcoder.ToList().Select((x,i)=>(x,i))
-                .ToDictionary(x=>x.x, x=>x.i);
-
-            var selected = s.Select(x=>dictionary[x]).Select(x=>x+1).ToArray();
-            var count = 0L;
-
-            var bitTree = new BIT(selected.Max()+1);
-
-            for (int j = 0; j < selected.Max(); j++)
+            var n = ReadValue<int>();
+            var aList = ReadList<int>().ToArray();
+ 
+            var max = aList.Max();
+ 
+            var bitTree = new BIT(max + 1);
+ 
+            var ans = 0L;
+ 
+            for (int j = 0; j < max; j++)
             {
-                var sum = j - bitTree.Sum(selected[j]);
-                count += sum;
-                bitTree.Add(selected[j], 1);
+                var sum = j - bitTree.Sum(aList[j]);
+                ans += sum;
+                bitTree.Add(aList[j], 1);
             }
-
-            Console.WriteLine(count);
+ 
+            Console.WriteLine(ans);
         }
-        
-        /// <summary>
-        /// BIT(Binary Indexed Tree) 
-        /// refs : https://www.slideshare.net/hcpc_hokudai/binary-indexed-tree
-        /// https://algo-logic.info/binary-indexed-tree/
-        /// </summary>
+
         public class BIT
         {
             // 配列の要素数 (数列の要素 + 1)
             private int n { get; }
-
+ 
             // データの格納先 (1-indexed)。初期値は0。
-            private long[] bit { get; }
-
+            private int[] bit { get; }
+ 
             public BIT(int n)
             {
                 this.n = n;
-                this.bit = new long[n + 1];
+                this.bit = new int[n+1];
             }
-
+ 
             // index i に tを加算する (a_i += x)
-            public void Add(int i, long x)
+            public void Add(int i, int x)
             {
+                // LSBが1のところにだけ足す
                 // Console.WriteLine(Convert.ToString(i, 2).PadLeft(n, '0'));
-                // indexにLSBを加算しながら更新していく。
                 for (int index = i; index < n; index += (index & -index))
                 {
                     bit[index] += x;
                 }
             }
-
+ 
             // 最初からi番目までの和
             public long Sum(int i)
             {
-                // Console.WriteLine(Convert.ToString(i, 2).PadLeft(n, '0'));
-                var sum = bit[0];
-                // 0になるまで、LSBを減算しながら足していく。
-                for (int index = i; index > 0; index -= (index & -index))
+                var sum = (long)bit[0];
+                // LSBが1のところだけ足していく。
+                for (int index = i; index >0; index-=(index & -index))
                 {
                     sum += bit[index];
                 }
-
+ 
                 return sum;
             }
-
+            
             // TODO 区間加算も実装しておく？
         }
 
@@ -109,7 +102,7 @@ namespace ABC264D
                 (T3) Convert.ChangeType(input[2], typeof(T3))
             );
         }
-        
+
         /// <summary>
         /// 指定した型として、一行読み込む。
         /// </summary>
