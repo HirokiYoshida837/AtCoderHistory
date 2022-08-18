@@ -1,6 +1,5 @@
 ﻿namespace ABCUtils.BIT
 {
-            
     /// <summary>
     /// BIT(Binary Indexed Tree) 
     /// refs : https://www.slideshare.net/hcpc_hokudai/binary-indexed-tree
