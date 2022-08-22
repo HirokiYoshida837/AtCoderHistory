@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Math;
 
-namespace ABC265E
+namespace ABC265E2
 {
     public static class Program
     {
@@ -24,73 +24,55 @@ namespace ABC265E
             (long c, long d) cd = (abcdef[2], abcdef[3]);
             (long e, long f) ef = (abcdef[4], abcdef[5]);
 
+            var a = new List<(long, long)>() {ab, cd, ef};
+
             var xyList = Enumerable.Range(0, m)
                 .Select(_ => ReadValue<long, long>())
                 .ToHashSet();
 
+            var dp = new Dictionary<(long, long), ModInt>();
 
-            var dp = new Dictionary<(long, long), ModInt>[n + 1];
-
-            for (var i = 0; i < dp.Length; i++)
-            {
-                dp[i] = new Dictionary<(long, long), ModInt>();
-            }
-
-            dp[0].Add((0, 0), 1);
-
+            dp.Add((0, 0), new ModInt(1));
 
             for (int i = 0; i < n; i++)
             {
-                // くばるDP
-                foreach (var (pos, count) in dp[i])
+                var nextDp = new Dictionary<(long, long), ModInt>();
+
+                foreach (var ((x, y), num) in dp)
                 {
-                    if (!xyList.Contains((pos.Item1 + ab.a, pos.Item2 + ab.b)))
+                    foreach (var (xd, yd) in a)
                     {
-                        if (dp[i + 1].ContainsKey((pos.Item1 + ab.a, pos.Item2 + ab.b)))
+                        var next = (x + xd, y + yd);
+
+                        if (xyList.Contains(next))
                         {
-                            dp[i + 1][(pos.Item1 + ab.a, pos.Item2 + ab.b)] += count;
+                            continue;
+                        }
+
+                        if (nextDp.ContainsKey(next))
+                        {
+                            nextDp[next] += num;
                         }
                         else
                         {
-                            dp[i + 1].Add((pos.Item1 + ab.a, pos.Item2 + ab.b), count);
-                        }
-                    }
-                    
-                    if (!xyList.Contains((pos.Item1 + cd.c, pos.Item2 + cd.d)))
-                    {
-                        if (dp[i + 1].ContainsKey((pos.Item1 + cd.c, pos.Item2 + cd.d)))
-                        {
-                            dp[i + 1][(pos.Item1 + cd.c, pos.Item2 + cd.d)] += count;
-                        }
-                        else
-                        {
-                            dp[i + 1].Add((pos.Item1 + cd.c, pos.Item2 + cd.d), count);
-                        }
-                    }
-                    
-                    if (!xyList.Contains((pos.Item1 + ef.e, pos.Item2 + ef.f)))
-                    {
-                        if (dp[i + 1].ContainsKey((pos.Item1 + ef.e, pos.Item2 + ef.f)))
-                        {
-                            dp[i + 1][(pos.Item1 + ef.e, pos.Item2 + ef.f)] += count;
-                        }
-                        else
-                        {
-                            dp[i + 1].Add((pos.Item1 + ef.e, pos.Item2 + ef.f), count);
+                            nextDp.Add(next, num);
                         }
                     }
                 }
+
+                dp = nextDp;
             }
 
-
             var sum = new ModInt();
-            foreach (var modInt in dp[n].Select(x=>x.Value))
+
+            foreach (var keyValuePair in dp)
             {
-                sum += modInt;
+                sum += keyValuePair.Value;
             }
 
             Console.WriteLine(sum);
         }
+
 
         /// <summary>
         /// ModInt (long)
