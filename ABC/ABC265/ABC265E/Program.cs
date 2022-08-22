@@ -48,11 +48,11 @@ namespace ABC265E
                     {
                         if (dp[i + 1].ContainsKey((pos.Item1 + ab.a, pos.Item2 + ab.b)))
                         {
-                            dp[i + 1][(pos.Item1 + ab.a, pos.Item2 + ab.b)] += 1;
+                            dp[i + 1][(pos.Item1 + ab.a, pos.Item2 + ab.b)] += count;
                         }
                         else
                         {
-                            dp[i + 1].Add((pos.Item1 + ab.a, pos.Item2 + ab.b), 1);
+                            dp[i + 1].Add((pos.Item1 + ab.a, pos.Item2 + ab.b), count);
                         }
                     }
                     
@@ -60,11 +60,11 @@ namespace ABC265E
                     {
                         if (dp[i + 1].ContainsKey((pos.Item1 + cd.c, pos.Item2 + cd.d)))
                         {
-                            dp[i + 1][(pos.Item1 + cd.c, pos.Item2 + cd.d)] += 1;
+                            dp[i + 1][(pos.Item1 + cd.c, pos.Item2 + cd.d)] += count;
                         }
                         else
                         {
-                            dp[i + 1].Add((pos.Item1 + cd.c, pos.Item2 + cd.d), 1);
+                            dp[i + 1].Add((pos.Item1 + cd.c, pos.Item2 + cd.d), count);
                         }
                     }
                     
@@ -72,11 +72,11 @@ namespace ABC265E
                     {
                         if (dp[i + 1].ContainsKey((pos.Item1 + ef.e, pos.Item2 + ef.f)))
                         {
-                            dp[i + 1][(pos.Item1 + ef.e, pos.Item2 + ef.f)] += 1;
+                            dp[i + 1][(pos.Item1 + ef.e, pos.Item2 + ef.f)] += count;
                         }
                         else
                         {
-                            dp[i + 1].Add((pos.Item1 + ef.e, pos.Item2 + ef.f), 1);
+                            dp[i + 1].Add((pos.Item1 + ef.e, pos.Item2 + ef.f), count);
                         }
                     }
                 }
