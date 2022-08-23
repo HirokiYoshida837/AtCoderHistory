@@ -17,48 +17,101 @@ namespace ABC253E
         public static void Main(string[] args)
         {
             var (n, m, k) = ReadValue<int, int, int>();
-            var dp = new ModInt[n][];
-            for (int i = 0; i < dp.Length; i++)
+
+            var dp = new ModInt[n + 1][];
+            for (var i = 0; i < dp.Length; i++)
             {
-                dp[i] = new ModInt[m + 1];
+                dp[i] = new ModInt[3 * m];
             }
 
-            for (int j = 0; j < m + 1; j++)
+            var lastBit = new BIT(3 * m);
+            for (int i = 1; i <= m; i++)
             {
-                dp[0][j] = 1;
+                dp[1][i] = 1;
+                lastBit.Add(i, 1);
             }
 
-            dp[0][0] = 0;
-
-            for (int i = 1; i < dp.Length; i++)
+            // もらうDP。
+            for (int i = 2; i <= n; i++)
             {
-                for (int item = 1; item < m + 1; item++)
+                var nextBit = new BIT(3 * m);
+                for (int j = 1; j <= m; j++)
                 {
-                    for (int j = 1; j <= item - k; j++)
-                    {
-                        if (0 < j && j <= m)
-                        {
-                            dp[i][item] += dp[i - i][j];
-                        }
-                    }
+                    var allSum = lastBit.Sum(m * 2);
 
-                    for (int j = item + k; j <= m; j++)
-                    {
-                        if (0 < j && j <= m)
-                        {
-                            dp[i][item] += dp[i - i][j];
-                        }
-                    }
+                    var diff = Math.Max(0, k - 1);
+                    var r = j + diff;
+                    var l = Math.Max(0, j - k);
+
+                    var lSum = lastBit.Sum(l);
+                    var rSum = lastBit.Sum(r);
+
+                    var d = rSum - lSum;
+
+                    var v = allSum - d;
+
+                    dp[i][j] = v;
+                    nextBit.Add(j, v);
+                }
+
+                lastBit = nextBit;
+            }
+
+
+            var sum = new ModInt(0);
+            foreach (var modInt in dp[n])
+            {
+                sum += modInt;
+            }
+
+            Console.WriteLine(sum);
+        }
+
+        /// <summary>
+        /// BIT(Binary Indexed Tree) 
+        /// refs : https://www.slideshare.net/hcpc_hokudai/binary-indexed-tree
+        /// https://algo-logic.info/binary-indexed-tree/
+        /// </summary>
+        public class BIT
+        {
+            // 配列の要素数 (数列の要素 + 1)
+            private int n { get; }
+
+            // データの格納先 (1-indexed)。初期値は0。
+            private ModInt[] bit { get; }
+
+            public BIT(int n)
+            {
+                this.n = n;
+                this.bit = new ModInt[n + 1];
+            }
+
+            // index i に tを加算する (a_i += x)
+            public void Add(int i, ModInt x)
+            {
+                // Console.WriteLine(Convert.ToString(i, 2).PadLeft(n, '0'));
+                // indexにLSBを加算しながら更新していく。
+                for (int index = i; index < n; index += (index & -index))
+                {
+                    bit[index] += x;
                 }
             }
 
-            var ans = 0L;
-            foreach (var modInt in dp[^1])
+            // 最初からi番目までの和
+            public ModInt Sum(int i)
             {
-                ans += modInt;
+                // Console.WriteLine(Convert.ToString(i, 2).PadLeft(n, '0'));
+                var sum = bit[0];
+                // 0になるまで、LSBを減算しながら足していく。
+                for (int index = i; index > 0; index -= (index & -index))
+                {
+                    sum += bit[index];
+                }
+
+                return sum;
             }
 
-            Console.WriteLine(ans);
+            // TODO 区間加算も実装しておく？
         }
 
 
