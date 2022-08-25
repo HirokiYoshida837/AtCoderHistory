@@ -20,7 +20,6 @@ namespace EDCP_G2
 
             (int x, int y)[] xyList = Enumerable.Range(0, m).Select(_ => ReadValue<int, int>()).ToArray();
 
-
             var dp = new int[n + 1];
 
             // x -> y
@@ -30,41 +29,16 @@ namespace EDCP_G2
             var dic = xyList.GroupBy(x => x.x)
                 .ToDictionary(x => x.Key, x => x.Select(item => item.y).ToArray());
 
-            // INの個数
-            var counts = new int[n + 1];
-            foreach (var (x, y) in xyList)
+            for (int i = 1; i <= n; i++)
             {
-                counts[y] += 1;
-            }
-
-            var pq = new PriorityQueue<int>();
-            for (var i = 1; i < counts.Length; i++)
-            {
-                if (counts[i] == 0)
+                if (!dic.ContainsKey(i))
                 {
-                    pq.Enqueue(i, i);
-                    dp[i] = 1;
+                    dic.Add(i, new int[0]);
                 }
             }
-
-            var topologicalSortRes = new List<int>();
-            while (pq.Count > 0)
-            {
-                var (k, v) = pq.Dequeue();
-                topologicalSortRes.Add(v);
-
-                if (dic.ContainsKey(v))
-                {
-                    foreach (var dest in dic[v])
-                    {
-                        counts[dest] -= 1;
-                        if (counts[dest] <= 0)
-                        {
-                            pq.Enqueue(dest, dest);
-                        }
-                    }
-                }
-            }
+            
+            // var (topologicalSortRes, isAcyclic) = TopologicalSort.Sort(n, xyList.ToList());
+            var (topologicalSortRes, isAcyclic) = TopologicalSort.Sort(dic);
 
             //  「G は有向閉路を含みません」なので気にせず実施してOK。
             // Console.WriteLine(topologicalSortRes);
@@ -84,9 +58,84 @@ namespace EDCP_G2
                 }
             }
 
-            // 辺の数なので-1
-            Console.WriteLine(dp.Max() - 1);
-            
+            Console.WriteLine(dp.Max());
+        }
+
+        public class TopologicalSort
+        {
+            /// <summary>
+            /// PriorityQueueを使用してトポロジカルソートを実行します。
+            /// </summary>
+            /// <param name="input">x : from, y: to</param>
+            /// <returns></returns>
+            public static (List<int> sortres, bool isAcyclic) Sort(int count, List<(int from, int to)> xyList)
+            {
+                // 向き先グラフ
+                var dic = xyList.GroupBy(x => x.from)
+                    .ToDictionary(x => x.Key, x => x.Select(item => item.to).ToArray());
+
+                for (int i = 1; i <= count; i++)
+                {
+                    if (!dic.ContainsKey(i))
+                    {
+                        dic.Add(i, new int[0]);
+                    }
+                }
+
+                return Sort(dic);
+            }
+
+            public static (List<int> sortres, bool isAcyclic) Sort(Dictionary<int, int[]> dic)
+            {
+                var count = dic.Count;
+                // INの個数
+                var counts = new int[count + 1];
+
+                foreach (var (k, values) in dic)
+                {
+                    foreach (var value in values)
+                    {
+                        counts[value] += 1;
+                    }
+                }
+
+                // foreach (var (_, y) in xyList)
+                // {
+                //     counts[y] += 1;
+                // }
+
+                var pq = new PriorityQueue<int>();
+                // inが無いものから順番に処理。
+                for (var i = 1; i < counts.Length; i++)
+                {
+                    if (counts[i] == 0)
+                    {
+                        pq.Enqueue(i, i);
+                    }
+                }
+
+                var topologicalSortRes = new List<int>();
+                while (pq.Count > 0)
+                {
+                    var (k, v) = pq.Dequeue();
+                    topologicalSortRes.Add(v);
+
+                    if (dic.ContainsKey(v))
+                    {
+                        foreach (var dest in dic[v])
+                        {
+                            counts[dest] -= 1;
+                            if (counts[dest] <= 0)
+                            {
+                                pq.Enqueue(dest, dest);
+                            }
+                        }
+                    }
+                }
+
+                // topologicalソートした結果の配列の長さがおかしければDAGではない。
+                return (topologicalSortRes, topologicalSortRes.Count == count);
+            }
         }
 
         /// <summary>
