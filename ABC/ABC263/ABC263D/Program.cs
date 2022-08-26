@@ -20,8 +20,6 @@ namespace ABC263D
             var (n, l, r) = ReadValue<int, long, long>();
             var aList = ReadList<long>().ToArray();
 
-            // if (l > 0)
-            // {
             // 累積和を取る
             var cusum = new List<long>() {0};
             foreach (var a in aList)
@@ -29,83 +27,37 @@ namespace ABC263D
                 cusum.Add(cusum.Last() + a);
             }
 
-            cusum.RemoveAt(0);
-            var averageFromLeft = cusum.Select((x, i) => Convert.ToDouble(x) / Convert.ToDouble(i + 1)).ToArray();
+            // lでの累積和を計算する
+            var cusumL = Enumerable.Range(0, cusum.Count).Select(x => x * l).ToList();
+            var diffCum = Enumerable.Range(0, cusumL.Count).Select(x => cusum[x] - cusumL[x]).ToList();
 
-            var max = Convert.ToDouble(float.MinValue);
-            var maxIndex = -1;
-            for (int i = 0; i < averageFromLeft.Count(); i++)
+            // 左からN個までの範囲だけをLで置き換えられるときの、減らせるスコア数の最大値。(=どこのマスまで選ぶか、を発展させて考える。)
+            var dp = new long[diffCum.Count];
+
+            dp[0] = 0;
+            for (int i = 1; i < dp.Length; i++)
             {
-                if (max <= averageFromLeft[i])
-                {
-                    max = averageFromLeft[i];
-                    maxIndex = i;
-                }
+                dp[i] = Math.Max(dp[i - 1], diffCum[i]);
             }
 
-            if (max > l)
+            var min = long.MaxValue - 100;
+            // rでの置き換え数を増やしながら探してみる。
+            for (int RC = 0; RC <= n; RC++)
             {
-                for (int i = 0; i <= maxIndex; i++)
-                {
-                    aList[i] = l;
-                }
-            }
-            // }
-            // else
-            // {
-            //     // 累積和を取る
-            //     var cusum = new List<long>() {0};
-            //     foreach (var a in aList)
-            //     {
-            //         cusum.Add(cusum.Last() + a);
-            //     }
-            //     
-            //     cusum.RemoveAt(0);
-            //     var averageFromLeft = cusum.Select((x, i) => Convert.ToDouble(x) / Convert.ToDouble(i + 1)).ToArray();
-            //     
-            //     
-            //     
-            //     
-            // }
+                // rで置き換える前の残った範囲の合計。
+                var valueSum = cusum[(cusum.Count - 1) - RC];
 
-            var aListRev = aList.Reverse().ToList();
+                // rで置き換えていない範囲に対して、ある範囲をLで置き換えたときに減らせる最大スコアをdpから取得。
+                valueSum -= dp[(cusum.Count - 1) - RC];
 
-            // if (r > 0)
-            // {
-            // 累積和を取る
-            var cusum2 = new List<long>() {0};
-            foreach (var a in aListRev)
-            {
-                cusum2.Add(cusum2.Last() + a);
+                // 最終スコアは、左側 + Rの個数*r 
+                var score = valueSum + RC * r;
+
+                // 毎回更新。
+                min = Math.Min(min, score);
             }
 
-            cusum2.RemoveAt(0);
-            var averageFromRight = cusum2.Select((x, i) => Convert.ToDouble(x) / Convert.ToDouble(i + 1)).ToArray();
-
-            var max2 = Convert.ToDouble(float.MinValue);
-            var maxIndex2 = -1;
-            for (int i = 0; i < averageFromRight.Count(); i++)
-            {
-                if (max2 <= averageFromRight[i])
-                {
-                    max2 = averageFromRight[i];
-                    maxIndex2 = i;
-                }
-            }
-
-
-            if (max2 > r)
-            {
-                for (int i = 0; i <= maxIndex2; i++)
-                {
-                    aListRev[i] = r;
-                }
-            }
-            // }
-
-
-            var sum = aListRev.Sum();
-            Console.WriteLine(sum);
+            Console.WriteLine(min);
         }
 
 
