@@ -19,22 +19,22 @@ namespace ABC266C
             var (Ax, Ay) = ReadValue<int, int>();
             var (Bx, By) = ReadValue<int, int>();
             var (Cx, Cy) = ReadValue<int, int>();
-            var (Zx, Zy) = ReadValue<int, int>();
+            var (Dx, Dy) = ReadValue<int, int>();
 
 
-            // var ABxBP = Cross((Ax, Ay), (Bx, By), (Bx, By), (Zx, Zy));
-            // var BCxCP = Cross((Bx, By), (Cx, Cy), (Cx, Cy), (Zx, Zy));
-            // var CAxAP = Cross((Cx, Cy), (Ax, Ay), (Ax, Ay), (Zx, Zy));
-            //
-            //
-            // var b = (ABxBP >= 0 && BCxCP >= 0 && CAxAP >= 0) || (ABxBP <= 0 && BCxCP <= 0 && CAxAP <= 0);
+            (int x, int y) A = (Ax, Ay);
+            (int x, int y) B = (Bx, By);
+            (int x, int y) C = (Cx, Cy);
 
-            var px = new List<double>() {Ax, Bx, Cx, Zx};
-            var py = new List<double>() {Ay, By, Cy, Zy};
+            (int x, int y) D = (Dx, Dy);
 
-            var concave = isConcave(px.ToArray(), py.ToArray());
+            // 全部の場合について、三角形の外側に点があるかどうかを判定。
+            var DinABC = IsInsideOfTriangle(A, B, C, D);
+            var AinBCD = IsInsideOfTriangle(B, C, D, A);
+            var BinCDA = IsInsideOfTriangle(C, D, A, B);
+            var CinDAB = IsInsideOfTriangle(D, A, B, C);
 
-            if (concave == 0)
+            if (!DinABC && !AinBCD && !BinCDA && !CinDAB)
             {
                 Console.WriteLine("Yes");
             }
@@ -42,41 +42,19 @@ namespace ABC266C
             {
                 Console.WriteLine("No");
             }
+            
         }
 
-        static int isInside(double ax, double ay, double bx, double by, double cx, double cy, double tx, double ty)
+
+        public static bool IsInsideOfTriangle((int x, int y) A, (int x, int y) B, (int x, int y) C, (int x, int y) P)
         {
-            double abXat, bcXbt, caXct;
+            //AB x BP, BC x CP, CA x AP
+            var ABxBP = Cross(A, B, B, P);
+            var BCxCP = Cross(B, C, C, P);
+            var CAxAP = Cross(C, A, A, P);
 
-            abXat = (bx - ax) * (ty - ay) - (by - ay) * (tx - ax);
-            bcXbt = (cx - bx) * (ty - by) - (cy - by) * (tx - bx);
-            caXct = (ax - cx) * (ty - cy) - (ay - cy) * (tx - cx);
-
-            if ((abXat > 0.0 && bcXbt > 0.0 && caXct > 0.0) || (abXat < 0.0 && bcXbt < 0.0 && caXct < 0.0))
-            {
-                return 1;
-            }
-            else if (abXat * bcXbt * caXct == 0.0)
-            {
-                return 0;
-            }
-
-            return 0;
-        }
-
-        static int isConcave(double[] px, double[] py)
-        {
-            int i;
-            for (i = 0; i < 4; i++)
-            {
-                if (isInside(px[i % 4], py[i % 4], px[(i + 1) % 4], py[(i + 1) % 4], px[(i + 2) % 4], py[(i + 2) % 4],
-                    px[(i + 3) % 4], py[(i + 3) % 4]) > 0)
-                {
-                    return 1;
-                }
-            }
-
-            return 0;
+            // 全部の外積の向きが同じなら三角形の内側にあると判定。
+            return (ABxBP >= 0 && BCxCP >= 0 && CAxAP >= 0) || (ABxBP <= 0 && BCxCP <= 0 && CAxAP <= 0);
         }
 
 
