@@ -24,19 +24,32 @@ namespace ABC266E
                 return;
             }
 
-            if (n==2)
+            var list = new List<double>();
+            list.Add(3.5);
+
+            for (int i = 2; i <= n; i++)
             {
-                Console.WriteLine("4.25");
-                return;
+                var lastE = list.Last();
+
+                var sum = 0d;
+                // 1 ～ 6まで
+                for (int v = 1; v <= 6; v++)
+                {
+                    if (v < lastE)
+                    {
+                        sum += lastE;
+                    }
+                    else
+                    {
+                        sum += v;
+                    }
+                }
+
+                var e = sum / 6;
+                list.Add(e);
             }
-            
-            
 
-
-            var dp = new long[n + 1];
-            
-            
-
+            Console.WriteLine(list.Last());
         }
 
 
