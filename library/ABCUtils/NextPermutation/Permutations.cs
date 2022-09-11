@@ -54,7 +54,7 @@ namespace ABCUtils.NextPermutation
             for (int bit = 0; bit < 1 << n; bit++)
             {
                 var bitS = Convert.ToString(bit, 2).PadLeft(n, '0');
-                if (bitS.Count(x => x == '0') != n) continue;
+                if (bitS.Count(x => x == '0') != r) continue;
 
                 var A = new List<T>();
 
