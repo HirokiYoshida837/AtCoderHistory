@@ -16,16 +16,52 @@ namespace ABC250C
     {
         public static void Main(string[] args)
         {
-            // var t = int.Parse(Console.ReadLine());
+            var (n, q) = ReadValue<int, int>();
+            var x = Enumerable.Range(0, q)
+                .Select(_ => ReadValue<int>())
+                .ToArray();
 
-            // static int func(int x)
-            // {
-            //     return x * x + 2 * x + 3;
-            // }
+            var dicFromNum = Enumerable.Range(1, n)
+                .ToDictionary(x => x, x => x);
 
-            // var ans = func(func(func(t) + t) + func(func(t)));
+            var array = Enumerable.Range(0, n + 1).ToArray();
 
-            // Console.WriteLine(ans);
+
+            foreach (var i in x)
+            {
+                var currentIndex = dicFromNum[i];
+
+                if (currentIndex == n)
+                {
+                    // 左側のぼーるを探す
+                    var leftBallNum = array[currentIndex - 1];
+
+                    // 入れ替える
+                    (array[currentIndex - 1], array[currentIndex]) = (array[currentIndex], array[currentIndex-1]);
+                    
+                    // 辞書を更新
+                    dicFromNum[i] = currentIndex -1;
+                    dicFromNum[leftBallNum] = currentIndex;
+                    
+                    
+                }
+                else
+                {
+                    // 右側のぼーるを探す
+                    var rightBallNum = array[currentIndex + 1];
+
+                    // 入れ替える
+                    (array[currentIndex], array[currentIndex + 1]) = (array[currentIndex + 1], array[currentIndex]);
+                    
+                    // 辞書を更新
+                    dicFromNum[i] = currentIndex + 1;
+                    dicFromNum[rightBallNum] = currentIndex;
+                }
+            }
+
+
+            var @join = String.Join(' ', array.Skip(1));
+            Console.WriteLine(join);
         }
 
 
@@ -53,7 +89,7 @@ namespace ABC250C
                 (T3) Convert.ChangeType(input[2], typeof(T3))
             );
         }
-        
+
         /// <summary>
         /// 指定した型として、一行読み込む。
         /// </summary>
