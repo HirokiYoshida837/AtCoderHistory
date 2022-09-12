@@ -16,16 +16,60 @@ namespace ABC250B
     {
         public static void Main(string[] args)
         {
-            // var t = int.Parse(Console.ReadLine());
+            var (n, a, b) = ReadValue<int, int, int>();
 
-            // static int func(int x)
-            // {
-            //     return x * x + 2 * x + 3;
-            // }
+            var vMatrix = new int[n, n];
 
-            // var ans = func(func(func(t) + t) + func(func(t)));
+            var v = 1;
 
-            // Console.WriteLine(ans);
+            for (int i = 0; i < n; i++)
+            {
+                vMatrix[0, i] = v;
+
+                v *= -1;
+            }
+
+            for (int i = 1; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    vMatrix[i, j] = vMatrix[i - 1, j] * -1;
+                }
+            }
+
+
+            var ansMatrix = new List<char>();
+
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int k = 0; k < a; k++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        var rv = vMatrix[i, j];
+                        var c = rv == 1 ? '.' : '#';
+                        ansMatrix.AddRange(Enumerable.Repeat(c, b));
+                    }
+                }
+            }
+
+            var chunkSize = n * b;
+            
+            
+            var chunks = ansMatrix.Select((v, i) => new { v, i })
+                .GroupBy(x => x.i / chunkSize)
+                .Select(g => g.Select(x => x.v));
+            
+            
+            foreach (var enumerable in chunks)
+            {
+                var array = enumerable.ToArray();
+                var s = new string(array);
+                Console.WriteLine(s);
+            }
+
+
         }
 
 
@@ -53,7 +97,7 @@ namespace ABC250B
                 (T3) Convert.ChangeType(input[2], typeof(T3))
             );
         }
-        
+
         /// <summary>
         /// 指定した型として、一行読み込む。
         /// </summary>
