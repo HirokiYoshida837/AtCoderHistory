@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace ABCUtils.Structure
 {
     /// <summary>
     /// refs : https://ufcpp.net/study/algorithm/col_circular.html
+    ///
+    /// 実装してみたが遅い？
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class CircularBuffer<T> : IEnumerable<T>
@@ -39,6 +42,7 @@ namespace ABCUtils.Structure
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int Pow2(uint n)
         {
             --n;
@@ -47,9 +51,13 @@ namespace ABCUtils.Structure
             return p + 1;
         }
 
+
         public T this[int i]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => this.data[(i + this.top) & this.mask];
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => this.data[(i + this.top) & this.mask] = value;
         }
 
@@ -58,6 +66,7 @@ namespace ABCUtils.Structure
         /// 先頭に新しい要素を追加。
         /// </summary>
         /// <param name="elem">追加する要素</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void InsertFirst(T elem)
         {
             if (this.Count >= this.data.Length - 1)
@@ -71,6 +80,7 @@ namespace ABCUtils.Structure
         /// 末尾に新しい要素を追加。
         /// </summary>
         /// <param name="elem">追加する要素</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void InsertLast(T elem)
         {
             if (this.Count >= this.data.Length - 1)
@@ -83,6 +93,7 @@ namespace ABCUtils.Structure
         /// <summary>
         /// 先頭の要素を削除。
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EraseFirst()
         {
             this.top = (this.top + 1) & this.mask;
@@ -91,11 +102,13 @@ namespace ABCUtils.Structure
         /// <summary>
         /// 末尾の要素を削除。
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void EraseLast()
         {
             this.bottom = (this.bottom - 1) & this.mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<T> GetEnumerator()
         {
             if (this.top <= this.bottom)
@@ -112,6 +125,7 @@ namespace ABCUtils.Structure
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
@@ -123,6 +137,7 @@ namespace ABCUtils.Structure
         /// <remarks>
         /// 配列長は2倍ずつ拡張していきます。
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void Extend()
         {
             T[] data = new T[this.data.Length * 2];
