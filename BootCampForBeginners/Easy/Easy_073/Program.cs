@@ -18,7 +18,48 @@ namespace Easy_073
         public static void Main(string[] args)
         {
             var n = ReadValue<string>();
-            
+
+            if (n.Length < 2)
+            {
+                var item = int.Parse(n);
+                Console.WriteLine(item);
+                return;
+            }
+
+            if (n.All(x => x == '9'))
+            {
+                Console.WriteLine(9 * n.Length);
+                return;
+            }
+
+
+            if (n[0] == '1')
+            {
+                if (n.Skip(1).All(x => x == '9'))
+                {
+                    Console.WriteLine((n.Length - 1) * 9 + (n[0] - '0'));
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine((n.Length - 1) * 9);
+                    return;
+                }
+            }
+            else
+            {
+                if (n.Skip(1).All(x => x == '9'))
+                {
+                    Console.WriteLine((n.Length - 1) * 9 + (n[0] - '0'));
+                    return;
+                }
+                else
+                {
+                    var value = (n.Length - 1) * 9 + ((n[0] - '0') - 1);
+                    Console.WriteLine(value);
+                    return;
+                }
+            }
         }
 
 
@@ -46,7 +87,7 @@ namespace Easy_073
                 (T3) Convert.ChangeType(input[2], typeof(T3))
             );
         }
-        
+
         /// <summary>
         /// 指定した型として、一行読み込む。
         /// </summary>
