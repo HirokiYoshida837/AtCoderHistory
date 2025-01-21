@@ -20,12 +20,9 @@
           },
           {
             "choice": "netcoreapp3.0"
-          },
-          {
-            "choice": "net7.0"
           }
         ],
-        "defaultValue": "net7.0"
+        "defaultValue": "netcoreapp3.0"
       }
     }
   }
